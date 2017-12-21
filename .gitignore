@@ -1,0 +1,14 @@
+*.pyc
+# exclude everything
+data/auto_labeled_people/*
+
+# exception to the rule
+!data/auto_labeled_people/.gitkeep
+
+*.pyc
+# exclude everything
+data/labeled_people/*
+
+# exception to the rule
+!data/labeled_people/.gitkeep
+
