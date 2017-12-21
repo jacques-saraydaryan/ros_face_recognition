@@ -120,13 +120,14 @@ class PeopleFaceIdentification():
                 label=os.path.splitext(file)[0]
                 if label in  self.faceList:
                     rospy.logwarn("DUPICATE FACE LABEL file_name:"+file+", label:"+str(label))
-                rospy.loginfo("file_name:"+file+", label:"+str(label))
-                #print("check --------------->:"+str(path+file))
-                face_image = face_recognition.load_image_file(path+"/"+file)
-                face_encoding = face_recognition.face_encodings(face_image)[0]
-                current_face=Face.Face(0,0,0,0,label)
-                current_face.encode(face_encoding)
-                self.faceList[label]=current_face
+                if(file!='.gitkeep'):
+                    rospy.loginfo("file_name:"+file+", label:"+str(label))
+                    #print("check --------------->:"+str(path+file))
+                    face_image = face_recognition.load_image_file(path+"/"+file)
+                    face_encoding = face_recognition.face_encodings(face_image)[0]
+                    current_face=Face.Face(0,0,0,0,label)
+                    current_face.encode(face_encoding)
+                    self.faceList[label]=current_face
         else:
              rospy.logerr("Unable to load face references, no such directory: "+str(path))
              return

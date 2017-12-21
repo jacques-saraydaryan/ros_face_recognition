@@ -18,7 +18,7 @@
     <param name="autosize" value="true" />
   </node>
   
-<rosparam file="/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/config/common_face.yaml" />
+<rosparam file="/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/config/common_face.yaml" />
    <node pkg="people_face_identification" type="PeopleFaceIdentification.py" name="PeopleFaceIdentification"  output="screen" /> 
 
 </launch>

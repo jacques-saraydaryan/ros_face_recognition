@@ -1,6 +1,6 @@
 PeopleFaceIdentificationSimple:
-  face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/labeled_people'
-  face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/auto_labeled_people'
+  face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/labeled_people'
+  face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/auto_labeled_people'
   user_cnn_module: True
   continuous_learn: False
   activate_detection: True
@@ -13,8 +13,8 @@ PeopleFaceIdentificationSimple:
 
 
 PeopleFaceIdentification:
-  face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/labeled_people'
-  face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/auto_labeled_people'
+  face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/ros_face_recognition/ros_face_recognition/data/labeled_people'
+  face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/ros_face_recognition/ros_face_recognition/data/auto_labeled_people'
   user_cnn_module: True
   continuous_learn: True
   activate_detection: True
