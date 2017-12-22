@@ -46,7 +46,7 @@ By default launchers start node to visualize incoming images and outgoing images
 
 
 ## Subscribed Topics
-### topic_img (http://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
+### topic_img [sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
 Incoming images for face detection and recognition
 
 
