@@ -42,4 +42,16 @@ The face_identification_test_simple.launch file start a one thread face detectio
 
 The face_identification_test.launch file start a multi threads face detection node (experimental)
 
-By default launcher start node to visualize incoming images and outgoing images
+By default launchers start node to visualize incoming images and outgoing images
+
+
+## Topics
+### topic_img
+topic_img (http://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
+
+
+
+## Services
+
+
+
