@@ -49,19 +49,19 @@ By default launchers start node to visualize incoming images and outgoing images
   #### 4.1.1 topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
    Incoming images for face detection and recognition
         
-  ### 4.2 Published Topics
-   #### 4.2.1 topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
-    Outgoing images with box and labels
-   #### 4.2.2 topic_face_box ([robocup_msgs/Entity2D]())
-    Outgoing face information including bounding box and labeled 
+ ### 4.2 Published Topics
+  #### 4.2.1 topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+   Outgoing images with box and labels
+  #### 4.2.2 topic_face_box ([robocup_msgs/Entity2D]())
+   Outgoing face information including bounding box and labeled 
             
-   ### 4.3 Services
-    #### 4.3.1 learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
-     Learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
-    #### 4.3.2 toogle_face_detection ([ros_face_recognition/ToogleFaceDetection](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleFaceDetection.srv))
-     Enable or disable node image processing
-    #### 4.3.3 toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
-     Enable or disable unknown face learning (auto generate uuid), learnt face will be stored into the face_folder_auto folder
+ ### 4.3 Services
+  #### 4.3.1 learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
+   Learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
+  #### 4.3.2 toogle_face_detection ([ros_face_recognition/ToogleFaceDetection](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleFaceDetection.srv))
+   Enable or disable node image processing
+  #### 4.3.3 toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
+   Enable or disable unknown face learning (auto generate uuid), learnt face will be stored into the face_folder_auto folder
 
 
 
