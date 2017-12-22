@@ -10,7 +10,7 @@ the project provide a ros node for people recognition (detection and learning) b
     #face_folder contains the initial labeled faces, these images are loaded at the node start
     face_folder: 'ros_face_recognition/data/labeled_people'
     
-    #face_folder contains the images learnt by the node when auto learn or lean service is activated
+    #face_folder auto  contains the images learnt by the node when auto learn or lean service is activated
     face_folder_auto: 'ros_face_recognition/data/auto_labeled_people'
     
     # If you want to use gpu let user_cnn_module: True, this method is faster and more accurate
@@ -34,7 +34,7 @@ the project provide a ros node for people recognition (detection and learning) b
     # define the topic of outgoing labeled boxes
     topic_face_box: '/robocup/get/entity2D_evidence'
     
-    # True displau labeled images
+    # True display labeled images
     publish_img: True
 ```
 
@@ -63,5 +63,28 @@ By default launchers start node to visualize incoming images and outgoing images
   #### 4.3.3 toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
    Enable or disable unknown face learning (auto generate uuid), learnt face will be stored into the face_folder_auto folder
 
+### 4.4  Params
+ #### face_folder
+  face_folder contains the initial labeled faces, these images are loaded at the node start
+ #### face_folder_auto
+  face_folder auto  contains the images learnt by the node when auto learn or lean service is activated
+ #### user_cnn_module
+  If you want to use gpu let user_cnn_module: True, this method is faster and more accurate
+ #### continuous_learn
+  Start the node in auto learn status, the node automatically learn and associated id to unknown faces
+ #### activate_detection
+  Start the node in face detection status, if false, no face is detected by the node
+ #### learn_timeout
+  indicate the number of seconds to learn face when using the LearnFace ros service
+ #### topic_img
+  define the topic of incoming images
+ #### topic_face_img
+  define the topic of outgoing labeled images
+ #### topic_face_box
+  define the topic of outgoing labeled boxes
+ #### publish_img
+  True display labeled images
+  
+  
 
 
