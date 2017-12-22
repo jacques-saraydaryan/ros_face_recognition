@@ -59,7 +59,13 @@ Outgoing face information including bounding box and labeled
 ## Services
 
 ### learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
-learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
+Learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
+
+### toogle_face_detection ([ros_face_recognition/ToogleFaceDetection](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleFaceDetection.srv))
+Enable or disable node image processing
+
+### toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
+Enable or disable unknown face learning (auto generate uuid), learnt face will be stored into the face_folder_auto folder
 
 
 
