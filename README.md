@@ -45,9 +45,9 @@ The face_identification_test.launch file start a multi threads face detection no
 By default launchers start node to visualize incoming images and outgoing images
 
 ## 4. Node
-   ### 4.1  Subscribed Topics
-      #### 4.1.1 topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
-      Incoming images for face detection and recognition
+ ### 4.1  Subscribed Topics
+  #### 4.1.1 topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+   Incoming images for face detection and recognition
         
    ### 4.2 Published Topics
       #### 4.2.1 topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
