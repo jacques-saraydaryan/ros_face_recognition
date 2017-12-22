@@ -101,10 +101,13 @@ class PeopleFaceIdentificationSimple():
                     rospy.loginfo("file_name:"+file+", label:"+str(label))
                     #print("check --------------->:"+str(path+file))
                     face_image = face_recognition.load_image_file(path+"/"+file)
-                    face_encoding = face_recognition.face_encodings(face_image)[0]
-                    current_face=Face.Face(0,0,0,0,label)
-                    current_face.encode(face_encoding)
-                    self.faceList[label]=current_face
+                    face_recognition_list=face_recognition.face_encodings(face_image)
+                    rospy.loginfo(len(face_recognition_list))
+                    if len(face_recognition_list)>0:
+                        face_encoding = face_recognition_list[0]
+                        current_face=Face.Face(0,0,0,0,label)
+                        current_face.encode(face_encoding)
+                        self.faceList[label]=current_face
         else:
              rospy.logerr("Unable to load face references, no such directory: "+str(path))
              return
@@ -146,6 +149,7 @@ class PeopleFaceIdentificationSimple():
             try:
                 # Conver image to numpy array
                 frame = self._bridge.imgmsg_to_cv2(data, 'bgr8')
+                frame_copy = self._bridge.imgmsg_to_cv2(data, 'bgr8')
                 if(self.user_cnn_module):
                     face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=0, model="cnn")
                 else:
@@ -161,6 +165,7 @@ class PeopleFaceIdentificationSimple():
                 bottom_r=0
                 left_r=0
                 right_r=0
+                
 
                 # Loop through each face in this frame oisFaceDetectionf video
                 for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
@@ -171,7 +176,7 @@ class PeopleFaceIdentificationSimple():
                     if (self.STATUS=='LEARNING' and name == "Unknown") or (self.continuous_learn and name == "Unknown"):
                         label_tmp=str(uuid.uuid1())
                         rospy.loginfo("unkwon face: launch learn operation")
-                        self._processLearnFace(top, right, bottom, left,face_encoding,label_tmp,frame,new_learnt_face)
+                        self._processLearnFace(top, right, bottom, left,face_encoding,label_tmp,frame_copy,new_learnt_face)
 
                     label_r=name
                     # Draw a box around the face
