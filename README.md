@@ -46,12 +46,20 @@ By default launchers start node to visualize incoming images and outgoing images
 
 
 ## Subscribed Topics
-### topic_img [sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
+### topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
 Incoming images for face detection and recognition
 
+## Published Topics
+### topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+Outgoing images with box and labels
 
+### topic_face_box ([robocup_msgs/Entity2D](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+Outgoing face information including bounding box and labeled
 
 ## Services
+
+### learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
+learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
 
 
 
