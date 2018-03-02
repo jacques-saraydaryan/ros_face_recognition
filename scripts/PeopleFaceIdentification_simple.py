@@ -11,7 +11,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import rospy
 from sensor_msgs.msg import Image
 from people_face_identification.srv import *
-from robocup_msgs.msg import Entity2D
+from robocup_msgs.msg import Entity2D,Entity2DList,Box
 
 
 import cv2
@@ -32,6 +32,7 @@ class PeopleFaceIdentificationSimple():
     continuous_learn=True
     learn_timeout=20
     # define the current image process, DECTECTION or LEARNING
+    LABEL_FACE="FACE"
     STATUS='DETECTION'
     FACE_FOLDER=        '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/labeled_people'
     FACE_FOLDER_AUTO=   '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/auto_labeled_people'
@@ -39,8 +40,11 @@ class PeopleFaceIdentificationSimple():
     topic_img='/usb_cam/image_raw'
     topic_face_img='/face_detection/face_image'
     topic_face_box='/face_detection/face_msg'
+    topic_all_faces_img='/face_detection/all_faces_image'
+    topic_all_faces_box='/face_detection/all_faces_msg'
     publish_img=True
     activate_detection=True
+    only_detect_faces=False
    
     #FACE_FOLDER='../data/labeled_people'
     faceList={}
@@ -55,6 +59,11 @@ class PeopleFaceIdentificationSimple():
         self.sub_rgb = rospy.Subscriber(self.topic_img, Image, self.rgb_callback, queue_size=20)
         self.pub_detections_image = rospy.Publisher(self.topic_face_img, Image, queue_size=20)
         self.pub_detections_msg = rospy.Publisher(self.topic_face_box, Entity2D, queue_size=1)
+
+        self.pub_all_faces_detections_image = rospy.Publisher(self.topic_all_faces_img, Image, queue_size=20)
+        self.pub_all_faces_detections_msg = rospy.Publisher(self.topic_all_faces_box, Entity2DList, queue_size=1)
+
+        
         self.learnFaceSrv = rospy.Service('learn_face', LearnFace, self.learnFaceSrvCallback)
         self.toogleFaceDetectionSrv = rospy.Service('toogle_face_detection', ToogleFaceDetection, self.toogleFaceDetectionSrvCallback)
         self.toogleAutoLearnFaceSrv = rospy.Service('toogle_auto_learn_face', ToogleAutoLearnFace, self.toogleAutoLearnFaceSrvCallback)
@@ -76,6 +85,12 @@ class PeopleFaceIdentificationSimple():
         self.publish_img=rospy.get_param('PeopleFaceIdentificationSimple/publish_img')
         self.activate_detection=rospy.get_param('PeopleFaceIdentificationSimple/activate_detection')
 
+        self.topic_all_faces_img=rospy.get_param('PeopleFaceIdentificationSimple/topic_all_faces_img')
+        self.topic_all_faces_box=rospy.get_param('PeopleFaceIdentificationSimple/topic_all_faces_box')
+
+        self.only_detect_faces=rospy.get_param('PeopleFaceIdentificationSimple/only_detect_faces')
+        
+
         rospy.loginfo("Param: face_folder_auto:"+str(self.FACE_FOLDER_AUTO))
         rospy.loginfo("Param: face_folder:"+str(self.FACE_FOLDER))
         rospy.loginfo("Param: user_cnn_module:"+str(self.user_cnn_module))
@@ -84,6 +99,7 @@ class PeopleFaceIdentificationSimple():
         rospy.loginfo("Param: topic_face_img:"+str(self.topic_face_img))
         rospy.loginfo("Param: topic_face_box:"+str(self.topic_face_box))
         rospy.loginfo("Param: activate_detection:"+str(self.activate_detection))
+        rospy.loginfo("Param: only_detect_faces:"+str(self.only_detect_faces))
         self.publish_img=rospy.get_param('PeopleFaceIdentificationSimple/publish_img')
 
         self.loadLearntFaces()
@@ -125,23 +141,84 @@ class PeopleFaceIdentificationSimple():
         #Callback for RGB imagesisFaceDetection
         #"""
 
-        if self.activate_detection:
-            data_result, label, top,left,bottom,right=self.process_img(data,None, None,None)
-            
-            if( label != 'NONE'):
-                detected_face=Entity2D()
-                detected_face.header.frame_id=data.header.frame_id            
-                detected_face.label=label
-                x0,y0=self.processBoxCenter(left,top,right,bottom)
-                detected_face.pose.x=x0
-                detected_face.pose.y=y0
-                rospy.loginfo("msg sent:"+str(detected_face))
-                self.pub_detections_msg.publish(detected_face)
-
-            if(self.publish_img):
-                msg_im = self._bridge.cv2_to_imgmsg(data_result, encoding="bgr8")
-                self.pub_detections_image.publish(msg_im)
         
+
+        if self.activate_detection:
+            if self.only_detect_faces:
+                data_result, detected_faces_map= self.process_img_faces_only(data)
+                face_list=[]
+                eList=Entity2DList()
+                for  (top, right, bottom, left) in detected_faces_map.values():
+                    #rospy.loginfo("top: %s, right: %s, bottom: %s, left:%s",str(top), str(right), str(bottom), str(left))
+                
+                    #publish boxes information
+                    detected_face=Entity2D()
+                    detected_face.header.frame_id=data.header.frame_id            
+                    detected_face.label=self.LABEL_FACE
+                    x0,y0=self.processBoxCenter(left,top,right,bottom)
+                    detected_face.pose.x=x0
+                    detected_face.pose.y=y0
+
+                    box=Box()
+                    box.x=top
+                    box.y=left
+                    box.width=abs(left-right)
+                    box.height=abs(top-bottom)
+                    detected_face.bounding_box=box
+
+                    face_list.append(detected_face)
+                    #rospy.loginfo("msg sent:"+str(detected_face))
+                    
+                    eList.entity2DList=face_list
+                self.pub_all_faces_detections_msg.publish(eList)
+
+                #publish image with detected faces if needed
+                if(self.publish_img):
+                    msg_im = self._bridge.cv2_to_imgmsg(data_result, encoding="bgr8")
+                    self.pub_all_faces_detections_image.publish(msg_im)
+
+
+            else:
+                data_result, label, top,left,bottom,right=self.process_img(data,None, None,None)
+                
+                if( label != 'NONE'):
+                    detected_face=Entity2D()
+                    detected_face.header.frame_id=data.header.frame_id            
+                    detected_face.label=label
+                    x0,y0=self.processBoxCenter(left,top,right,bottom)
+                    detected_face.pose.x=x0
+                    detected_face.pose.y=y0
+                    rospy.loginfo("msg sent:"+str(detected_face))
+                    self.pub_detections_msg.publish(detected_face)
+
+                if(self.publish_img):
+                        msg_im = self._bridge.cv2_to_imgmsg(data_result, encoding="bgr8")
+                        self.pub_detections_image.publish(msg_im)
+    
+
+    def process_img_faces_only(self,data):
+        detected_faces_map={}
+        try:
+                # Conver image to numpy array
+                frame = self._bridge.imgmsg_to_cv2(data, 'bgr8')
+                frame_copy = self._bridge.imgmsg_to_cv2(data, 'bgr8')
+                if(self.user_cnn_module):
+                    face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=0, model="cnn")
+                else:
+                    face_locations = face_recognition.face_locations(frame)
+                i=0
+                for location in face_locations:
+                    #rospy.loginfo("WORKER[%s] ----face[%s] x0: %s, y0: %s, x1: %s, y1: %s",str(name_w),str(i),str(location[0]),str(location[1]),str(location[2]),str(location[3]))
+                    detected_faces_map[i]=(location[0], location[1], location[2], location[3])
+                    i=i+1
+                    # Draw a box around the face
+                    cv2.rectangle(frame, (location[3], location[0]), (location[1], location[2]), (0, 255, 0), 2)              
+                return frame,detected_faces_map
+        except CvBridgeError as e:
+                    rospy.logwarn(e)
+                    return "no Value"
+                        #time.sleep(10)
+
 
     def process_img(self,data,input_q, output_q,name_w):
             new_learnt_face=[]

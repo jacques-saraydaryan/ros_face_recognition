@@ -4,13 +4,15 @@ PeopleFaceIdentificationSimple:
   user_cnn_module: True
   continuous_learn: False
   activate_detection: True
+  only_detect_faces: False
   learn_timeout: 20
   topic_img: '/usb_cam/image_raw'
   #topic_img: '/camera/rgb/image_rect_color'
   topic_face_img: '/face_detection/face_image'
   topic_face_box: '/robocup/get/entity2D_evidence'
+  topic_all_faces_box: '/face_detection/all_faces_msg'
+  topic_all_faces_img: '/face_detection/all_faces_image'
   publish_img: True
-
 
 PeopleFaceIdentification:
   face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/ros_face_recognition/ros_face_recognition/data/labeled_people'
