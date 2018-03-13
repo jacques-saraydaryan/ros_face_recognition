@@ -1,6 +1,7 @@
 PeopleFaceIdentificationSimple:
   face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/labeled_people'
   face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/auto_labeled_people'
+  imgtest_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/img_tests'
   user_cnn_module: True
   continuous_learn: False
   activate_detection: True

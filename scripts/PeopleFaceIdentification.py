@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+__author__ ='Jacques Saraydaryan'
 import os
 import sys
 
