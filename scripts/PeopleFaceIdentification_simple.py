@@ -75,6 +75,7 @@ class PeopleFaceIdentificationSimple():
         self.detectFaceFromImgSrv = rospy.Service('detect_face_from_img', DetectFaceFromImg, self.detectFaceFromImgSrvCallback)
         self.toogleFaceDetectionSrv = rospy.Service('toogle_face_detection', ToogleFaceDetection, self.toogleFaceDetectionSrvCallback)
         self.toogleAutoLearnFaceSrv = rospy.Service('toogle_auto_learn_face', ToogleAutoLearnFace, self.toogleAutoLearnFaceSrvCallback)
+        self.getImgFomIdSrv = rospy.Service('get_img_from_id', GetImgFromId, self.getImgFromIdSrvCallback)
 
         # spin
         rospy.spin()
@@ -441,6 +442,29 @@ class PeopleFaceIdentificationSimple():
     def toogleAutoLearnFaceSrvCallback(self,req):
         self.continuous_learn=req.isAutoLearn
         return True
+
+    def getImgFromIdSrvCallback(self,req):
+        path=self.FACE_FOLDER
+        auto_learn_path=self.FACE_FOLDER_AUTO
+        imgResult=self.getImgFromLabel(path,req.label)
+        if imgResult ==None:
+            imgResult=self.getImgFromLabel(auto_learn_path,req.label)
+        return GetImgFromIdResponse(imgResult)
+
+    def getImgFromLabel(self,folder,label):
+        try:
+            if os.path.exists(folder):
+                fileList=os.listdir(folder)
+                for file in fileList:
+                    label_f=os.path.splitext(file)[0]
+                    if label_f ==  label:
+                        #Load Image
+                        img_loaded = cv2.imread((folder+"/"+file))
+                        msg_img = self._bridge.cv2_to_imgmsg(img_loaded, encoding="bgr8")
+                        return msg_img
+        except Exception as e:
+            rospy.logwarn("Error when searching image from label :"+str(e))
+        return None
 
 
 def main():

@@ -26,6 +26,7 @@ robocup_msgs
    ToogleAutoLearnFace.srv
    DetectFaceFromImg.srv
    LearnFaceFromImg.srv
+   GetImgFromId.srv
  )
 
 ## Generate actions in the 'action' folder

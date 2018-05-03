@@ -19,10 +19,10 @@ def LoadImgAndPublish():
 
     
     #Load Image
-    img_loaded1 = cv2.imread(test_folder+'/onePeople.jpg')
+    img_loaded1 = cv2.imread(test_folder+'/1BigSeveralPeople.png')
     msg_im1 = _bridge.cv2_to_imgmsg(img_loaded1, encoding="bgr8")
 
-    img_loaded2 = cv2.imread(test_folder+'/1BigSeveralPeople.png')
+    img_loaded2 = cv2.imread(test_folder+'/onePeople.jpg')
     msg_im2 = _bridge.cv2_to_imgmsg(img_loaded2, encoding="bgr8")
     
     
