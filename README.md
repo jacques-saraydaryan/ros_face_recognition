@@ -3,7 +3,10 @@
 ## 2. Description
 the project provide a ros node for people recognition (detection and learning) base on the dlib python package an especially on [the python face_recognition package] (https://pypi.python.org/pypi/face_recognition) 
 
-## 3.  Configuration 
+## 3. Authors
+* Jacques Saraydaryan
+
+## 4.  Configuration 
 
 2 launch files are available, both get the configuration from the common_face.yaml file:
 ```python
@@ -44,45 +47,45 @@ The face_identification_test.launch file start a multi threads face detection no
 
 By default launchers start node to visualize incoming images and outgoing images
 
-## 4. Node
- ### 4.1  Subscribed Topics
-  #### 4.1.1 topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+## 5. Node
+ ### 5.1  Subscribed Topics
+  #### 5.1.1 topic_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
    Incoming images for face detection and recognition
         
- ### 4.2 Published Topics
-  #### 4.2.1 topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
+ ### 5.2 Published Topics
+  #### 5.2.1 topic_face_img ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
    Outgoing images with box and labels
-  #### 4.2.2 topic_face_box ([robocup_msgs/Entity2D]())
+  #### 5.2.2 topic_face_box ([robocup_msgs/Entity2D]())
    Outgoing face information including bounding box and labeled 
             
- ### 4.3 Services
-  #### 4.3.1 learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
+ ### 5.3 Services
+  #### 5.3.1 learn_face ([ros_face_recognition/LearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/LearnFace.srv))
    Learn the largest unknown face with the given label, this operation wait learn_timeout second before ending
-  #### 4.3.2 toogle_face_detection ([ros_face_recognition/ToogleFaceDetection](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleFaceDetection.srv))
+  #### 5.3.2 toogle_face_detection ([ros_face_recognition/ToogleFaceDetection](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleFaceDetection.srv))
    Enable or disable node image processing
-  #### 4.3.3 toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
+  #### 5.3.3 toogle_auto_learn_face ([ros_face_recognition/ToogleAutoLearnFace](https://github.com/jacques-saraydaryan/ros_face_recognition/blob/master/srv/ToogleAutoLearnFace.srv))
    Enable or disable unknown face learning (auto generate uuid), learnt face will be stored into the face_folder_auto folder
 
-### 4.4  Params
- #### 4.4.1 face_folder (string)
+### 5.4  Params
+ #### 5.4.1 face_folder (string)
   face_folder contains the initial labeled faces, these images are loaded at the node start
- #### 4.4.2 face_folder_auto (string)
+ #### 5.4.2 face_folder_auto (string)
   face_folder auto  contains the images learnt by the node when auto learn or lean service is activated
- #### 4.4.3 user_cnn_module (bool, default: true) 
+ #### 5.4.3 user_cnn_module (bool, default: true) 
   If you want to use gpu let user_cnn_module: True, this method is faster and more accurate
- #### 4.4.4 continuous_learn (bool, default: false) 
+ #### 5.4.4 continuous_learn (bool, default: false) 
   Start the node in auto learn status, the node automatically learn and associated id to unknown faces
- #### 4.4.5 activate_detection (bool, default: true) 
+ #### 5.4.5 activate_detection (bool, default: true) 
   Start the node in face detection status, if false, no face is detected by the node
- #### 4.4.6 learn_timeout (int, default: 20)
+ #### 5.4.6 learn_timeout (int, default: 20)
   indicate the number of seconds to learn face when using the LearnFace ros service
- #### 4.4.7 topic_img (string, default:/usb_cam/image_raw)
+ #### 5.4.7 topic_img (string, default:/usb_cam/image_raw)
   define the topic of incoming images
- #### 4.4.8 topic_face_img (string, default:/face_detection/face_image)
+ #### 5.4.8 topic_face_img (string, default:/face_detection/face_image)
   define the topic of outgoing labeled images
- #### 4.4.9 topic_face_box (string, default:/robocup/get/entity2D_evidence)
+ #### 5.4.9 topic_face_box (string, default:/robocup/get/entity2D_evidence)
   define the topic of outgoing labeled boxes
- #### 4.4.10 publish_img (bool, default: false) 
+ #### 5.4.10 publish_img (bool, default: false) 
   True display labeled images
   
   
