@@ -1,3 +1,5 @@
 sensor_msgs/Image img
+# optional true means that current image is already a face
+bool isImgFace
 ---
 robocup_msgs/Entity2DList entityList

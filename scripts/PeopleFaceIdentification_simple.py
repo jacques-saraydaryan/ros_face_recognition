@@ -191,8 +191,12 @@ class PeopleFaceIdentificationSimple():
     #######                 Process Images                           ######
     #######################################################################
     def process_img(self,data,name_w,current_status):
+        return self.process_img_face(data,name_w,current_status,False)
+
+    def process_img_face(self,data,name_w,current_status,isImgFace):
             detected_faces_list=[]
             new_learnt_face=[]
+            face_locations=[]
             label_r='NONE'
             if(current_status== None):
                 current_status=self.STATUS
@@ -208,8 +212,12 @@ class PeopleFaceIdentificationSimple():
                 i=0
                 for location in face_locations:
                     i=i+1
+                    
+                if isImgFace:
+                    face_encodings = face_recognition.face_encodings(frame)
+                else:
+                    face_encodings = face_recognition.face_encodings(frame, face_locations)
 
-                face_encodings = face_recognition.face_encodings(frame, face_locations)
                 # Find all the faces and face enqcodings in the frame of video
                 top_r=0
                 bottom_r=0
@@ -270,6 +278,7 @@ class PeopleFaceIdentificationSimple():
                         rospy.loginfo("")
                         os.rename(self.FACE_FOLDER_AUTO+"/"+oldId+'.png', self.FACE_FOLDER_AUTO+"/"+_labelToLearn+'.png')
                         rospy.loginfo("BIGGEST FACE of "+str(len(new_learnt_face))+":"+biggest_face.label)
+
 
 
                 return frame,label_r,top_r,left_r,bottom_r,right_r,detected_faces_list      
@@ -399,7 +408,7 @@ class PeopleFaceIdentificationSimple():
     def detectFaceFromImgSrvCallback(self,req):
         img=req.img
         try:
-            frame,label_r,top_r,left_r,bottom_r,right_r,detected_faces_list=self.process_img(img, None,self.DETECTION_STATUS)
+            frame,label_r,top_r,left_r,bottom_r,right_r,detected_faces_list=self.process_img_face(img, None,self.DETECTION_STATUS,req.isImgFace)
             eList=Entity2DList()
             entity2D_list=[]
             for  face in detected_faces_list:
