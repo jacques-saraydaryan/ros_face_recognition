@@ -93,5 +93,17 @@ By default launchers start node to visualize incoming images and outgoing images
   True display labeled images
   
   
+## 6. How to test
 
+Start the main node
+
+```
+roslaunch people_face_identification face_identification.launch
+```
+
+Call the Action Test node
+
+```
+rosrun people_face_identification LoadAndPublishImgTool.py 
+```
 

@@ -10,7 +10,7 @@ from people_face_identification.srv import LearnFaceFromImg,DetectFaceFromImg
 def LoadImgAndPublish():
     _bridge = CvBridge()
     topic_img=rospy.get_param('PeopleFaceIdentificationSimple/topic_img','/usb_cam/image_raw')
-    test_folder=rospy.get_param('PeopleFaceIdentificationSimple/imgtest_folder','/home/astro/catkin_robocup2018/src/people_mng/ros_face_recognition/data/img_tests')
+    test_folder=rospy.get_param('PeopleFaceIdentificationSimple/imgtest_folder','../data/img_tests')
 
     
     pub = rospy.Publisher(topic_img, Image, queue_size=10)
