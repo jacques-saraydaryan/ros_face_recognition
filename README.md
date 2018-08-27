@@ -5,7 +5,7 @@ the project provide a ros node for people recognition (detection and learning) b
 
 ![Sample Face Recognition](img/ros_face_recognition.gif "Auto learning face example") 
 
-A complete video demonstration is available [here] (https://youtu.be/a1S2WkGmSc0)
+A complete video demonstration is available [here](https://youtu.be/a1S2WkGmSc0)
 
 ## 3. Authors
 * Jacques Saraydaryan
