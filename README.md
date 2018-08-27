@@ -1,7 +1,7 @@
 # 1. ros_face_recognition
 
 ## 2. Description
-the project provide a ros node for people recognition (detection and learning) base on the dlib python package an especially on [the python face_recognition package] (https://pypi.python.org/pypi/face_recognition)
+the project provide a ros node for people recognition (detection and learning) base on the dlib python package an especially on [the python face_recognition package](https://pypi.python.org/pypi/face_recognition)
 
 ![Sample Face Recognition](img/ros_face_recognition.gif "Auto learning face example") 
 
