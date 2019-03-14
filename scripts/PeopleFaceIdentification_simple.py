@@ -22,6 +22,7 @@ import uuid
 import face_recognition
 
 from common import Face,Timeout
+from process.FaceDetectionCv import FaceDetectionCv
 
 #TO DO BEFORE LAUNCH
 # export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
@@ -76,6 +77,7 @@ class PeopleFaceIdentificationSimple():
         self.toogleFaceDetectionSrv = rospy.Service('toogle_face_detection', ToogleFaceDetection, self.toogleFaceDetectionSrvCallback)
         self.toogleAutoLearnFaceSrv = rospy.Service('toogle_auto_learn_face', ToogleAutoLearnFace, self.toogleAutoLearnFaceSrvCallback)
         self.getImgFomIdSrv = rospy.Service('get_img_from_id', GetImgFromId, self.getImgFromIdSrvCallback)
+        self.cascadeHaarFaceDetection = FaceDetectionCv(self.config_folder)
 
         # spin
         rospy.spin()
@@ -88,7 +90,7 @@ class PeopleFaceIdentificationSimple():
         #load face files form data directory
         self.FACE_FOLDER=rospy.get_param('PeopleFaceIdentificationSimple/face_folder')
         self.FACE_FOLDER_AUTO=rospy.get_param('PeopleFaceIdentificationSimple/face_folder_auto')
-        self.user_cnn_module=rospy.get_param('PeopleFaceIdentificationSimple/user_cnn_module')
+        self.face_detection_mode=rospy.get_param('PeopleFaceIdentificationSimple/face_detection_mode')
         self.continuous_learn=rospy.get_param('PeopleFaceIdentificationSimple/continuous_learn')
         self.learn_timeout=rospy.get_param('PeopleFaceIdentificationSimple/learn_timeout')
 
@@ -102,11 +104,12 @@ class PeopleFaceIdentificationSimple():
         self.topic_all_faces_box=rospy.get_param('PeopleFaceIdentificationSimple/topic_all_faces_box')
 
         self.only_detect_faces=rospy.get_param('PeopleFaceIdentificationSimple/only_detect_faces')
+        self.config_folder=rospy.get_param('PeopleFaceIdentificationSimple/config_folder')
         
 
         rospy.loginfo("Param: face_folder_auto:"+str(self.FACE_FOLDER_AUTO))
         rospy.loginfo("Param: face_folder:"+str(self.FACE_FOLDER))
-        rospy.loginfo("Param: user_cnn_module:"+str(self.user_cnn_module))
+        rospy.loginfo("Param: face_detection_mode:"+str(self.face_detection_mode))
         rospy.loginfo("Param: continuous_learn:"+str(self.continuous_learn))
         rospy.loginfo("Param: topic_img:"+str(self.topic_img))
         rospy.loginfo("Param: topic_face_img:"+str(self.topic_face_img))
@@ -134,7 +137,7 @@ class PeopleFaceIdentificationSimple():
                     rospy.loginfo(len(face_recognition_list))
                     if len(face_recognition_list)>0:
                         face_encoding = face_recognition_list[0]
-                        current_face=Face.Face(0,0,0,0,label)
+                        current_face=Face.Face(0,0,0,0,label,0)
                         current_face.encode(face_encoding)
                         self.faceList[label]=current_face
         else:
@@ -171,10 +174,14 @@ class PeopleFaceIdentificationSimple():
                 # Conver image to numpy array
                 frame = self._bridge.imgmsg_to_cv2(data, 'bgr8')
                 frame_copy = self._bridge.imgmsg_to_cv2(data, 'bgr8')
-                if(self.user_cnn_module):
+
+
+                if self.face_detection_mode==2:
                     face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=0, model="cnn")
-                else:
+                elif self.face_detection_mode==1:
                     face_locations = face_recognition.face_locations(frame)
+                else:
+                    face_locations= self.cascadeHaarFaceDetection.processImg(frame)
                 i=0
                 for location in face_locations:
                     detected_faces_map[i]=(location[0], location[1], location[2], location[3])
@@ -190,10 +197,10 @@ class PeopleFaceIdentificationSimple():
     #######################################################################
     #######                 Process Images                           ######
     #######################################################################
-    def process_img(self,data,name_w,current_status):
-        return self.process_img_face(data,name_w,current_status,False)
+    def process_img(self,data, name_w, current_status):
+        return self.process_img_face(data, name_w, current_status, False)
 
-    def process_img_face(self,data,name_w,current_status,isImgFace):
+    def process_img_face(self,data, name_w, current_status, isImgFace):
             detected_faces_list=[]
             new_learnt_face=[]
             face_locations=[]
@@ -204,19 +211,31 @@ class PeopleFaceIdentificationSimple():
                 # Conver image to numpy array
                 frame = self._bridge.imgmsg_to_cv2(data, 'bgr8')
                 frame_copy = self._bridge.imgmsg_to_cv2(data, 'bgr8')
-                
-                if(self.user_cnn_module):
-                    face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=0, model="cnn")
+
+                if not isImgFace:
+                    if self.face_detection_mode==2:
+                        face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=0, model="cnn")
+                    elif self.face_detection_mode==1:
+                        face_locations = face_recognition.face_locations(frame)
+                    else:
+                        face_locations= self.cascadeHaarFaceDetection.processImg(frame)
+                        #rospy.logwarn(face_locations)
                 else:
-                    face_locations = face_recognition.face_locations(frame)
+                    face_locations=[]
+                    face_locations.append((long(0), long(0 + frame.shape[0]), long(0 + frame.shape[1]), long(0)))
+
                 i=0
                 for location in face_locations:
                     i=i+1
-                    
-                if isImgFace:
-                    face_encodings = face_recognition.face_encodings(frame)
-                else:
-                    face_encodings = face_recognition.face_encodings(frame, face_locations)
+
+                if i==0:
+                    rospy.logdebug("NO FACE DETECTED ON THE CURRENT IMG")
+
+                
+                #if isImgFace:
+                #    face_encodings = face_recognition.face_encodings(frame)
+                #else:
+                face_encodings = face_recognition.face_encodings(frame, face_locations)
 
                 # Find all the faces and face enqcodings in the frame of video
                 top_r=0
@@ -228,15 +247,15 @@ class PeopleFaceIdentificationSimple():
                 for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
                     # See if the face is a match for the known face(s)
                     
-                    name = self._processDetectFace(top, right, bottom, left,face_encoding)
-                    current_face=Face.Face(top,left,bottom,right,name)
+                    name,distance = self._processDetectFace(top, right, bottom, left,face_encoding)
+                    current_face=Face.Face(top,left,bottom,right,name,distance)
                     detected_faces_list.append(current_face)
                     
-                    rospy.loginfo("STATUS: "+current_status)
+                    rospy.logdebug("STATUS: "+current_status)
                     if (current_status==self.LEARNING_STATUS and name == "Unknown") or (self.continuous_learn and name == "Unknown") or (current_status==self.FORCE_LEARNING_STATUS):
                         
                         label_tmp=str(uuid.uuid1())
-                        rospy.loginfo("unkwon face: launch learn operation")
+                        rospy.loginfo("unknown face: launch learn operation")
                         self._processLearnFace(top, right, bottom, left,face_encoding,label_tmp,frame_copy,new_learnt_face)
                     label_r=name
                     # Draw a box around the face
@@ -245,9 +264,9 @@ class PeopleFaceIdentificationSimple():
                     # Draw a label with a name below the face
                     cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
                     font = cv2.FONT_HERSHEY_DUPLEX
-                    cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+                    cv2.putText(frame, str(round(distance*100,1))+"% "+name, (left + 6, bottom - 6), font, 0.8, (255, 255, 255), 1)
 
-                    x0,y0 =self._processBoxCenter(top, right, bottom, left)
+                    x0, y0 =self._processBoxCenter(top, right, bottom, left)
                     cv2.circle(frame, (x0, y0), 5, (0, 255, 0), cv2.FILLED)
                     top_r=top
                     bottom_r=bottom
@@ -363,7 +382,7 @@ class PeopleFaceIdentificationSimple():
     def _processLearnFace(self,top, right, bottom, left,face_encoding,label_tmp,frame,new_learnt_face):
         #save file to learn directory and crop according box
         cv2.imwrite(self.FACE_FOLDER_AUTO+"/"+label_tmp+".png", frame[top:bottom, left:right])
-        new_face=Face.Face(0,0,0,0,label_tmp)
+        new_face=Face.Face(0,0,0,0,label_tmp,0)
         new_face.encode(face_encoding)
         self.faceList[label_tmp]=new_face
         new_learnt_face.append(new_face)
@@ -372,11 +391,14 @@ class PeopleFaceIdentificationSimple():
 
     def _processDetectFace(self,top, right, bottom, left,face_encoding):
         name = "Unknown"
+        distance=0.0
         for label in self.faceList.keys():
             match = face_recognition.compare_faces([self.faceList[label].encoding], face_encoding)
+            distance=face_recognition.face_distance([self.faceList[label].encoding], face_encoding)
+            #rospy.logwarn("DISTANCE TO THE FACE ------------------------------------------> "+str(distance))
             if match[0]:
                 name = self.faceList[label].label
-        return name
+        return name,distance
 
     def _processBoxCenter(self, top, right, bottom, left):
         y0= int(top+abs((bottom-top)/2))
@@ -406,6 +428,7 @@ class PeopleFaceIdentificationSimple():
                 return True
 
     def detectFaceFromImgSrvCallback(self,req):
+        #rospy.logdebug("FACE DETECTION isIMGFace:"+str(req.isImgFace))
         img=req.img
         try:
             frame,label_r,top_r,left_r,bottom_r,right_r,detected_faces_list=self.process_img_face(img, None,self.DETECTION_STATUS,req.isImgFace)
@@ -416,6 +439,7 @@ class PeopleFaceIdentificationSimple():
                 detected_face=Entity2D()
                 detected_face.header.frame_id=img.header.frame_id            
                 detected_face.label=face.label
+                detected_face.score=face.distance
                 x0,y0=self._processBoxCenter(face.left,face.top,face.right,face.bottom)
                 detected_face.pose.x=x0
                 detected_face.pose.y=y0

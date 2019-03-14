@@ -19,6 +19,6 @@
   </node>
   
 <rosparam file="/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/config/common_face.yaml" />
-   <node pkg="people_face_identification" type="PeopleFaceIdentification.py" name="PeopleFaceIdentification"  output="screen" /> 
+   <node pkg="people_face_identification" type="PeopleFaceIdentification_simple.py" name="PeopleFaceIdentification"  output="screen" /> 
 
 </launch>

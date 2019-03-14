@@ -19,13 +19,17 @@ def LoadImgAndPublish():
 
     
     #Load Image
+    #img_loaded1 = cv2.imread(test_folder+'/1BigSeveralPeople.png')
     img_loaded1 = cv2.imread(test_folder+'/1BigSeveralPeople.png')
+    
     msg_im1 = _bridge.cv2_to_imgmsg(img_loaded1, encoding="bgr8")
 
     #img_loaded2 = cv2.imread(test_folder+'/onePeople.jpg')
+    #img_loaded2 = cv2.imread(test_folder+'/onePeople.jpg')
     #img_loaded2 = cv2.imread(test_folder+'/imgMulti4.png')
     #img_loaded2 = cv2.imread(test_folder+'/group-diff-position.jpg')
-    img_loaded2 = cv2.imread(test_folder+'/imageFrontPepper4.png')
+    img_loaded2 = cv2.imread(test_folder+'/group-sit.jpg')
+    #img_loaded2 = cv2.imread(test_folder+'/imageFrontPepper4.png')
     
     msg_im2 = _bridge.cv2_to_imgmsg(img_loaded2, encoding="bgr8")
     
@@ -42,6 +46,8 @@ def LoadImgAndPublish():
     #Publish image
     pub.publish(msg_im1)
 
+    rospy.sleep(5)
+
     #call service to detect people
     rospy.wait_for_service('detect_face_from_img')
     try:
@@ -54,19 +60,6 @@ def LoadImgAndPublish():
     
     pub.publish(msg_im2)
     
-
-
-    img_loaded3 = cv2.imread(test_folder+'/1Facev1.png')
-    msg_im3 = _bridge.cv2_to_imgmsg(img_loaded3, encoding="bgr8")
-
-    #call service to detect people
-    rospy.wait_for_service('detect_face_from_img')
-    try:
-        detect_from_img_srv = rospy.ServiceProxy('detect_face_from_img', DetectFaceFromImg)
-        resp2 = detect_from_img_srv(msg_im3,True)
-        print "service:"+str(resp2.entityList)
-    except rospy.ServiceException, e:
-        print "Service call failed: %s"%e
 
 
 
