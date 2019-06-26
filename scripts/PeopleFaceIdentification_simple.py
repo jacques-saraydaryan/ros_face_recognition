@@ -43,7 +43,7 @@ class PeopleFaceIdentificationSimple():
     FACE_FOLDER=        '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/labeled_people'
     FACE_FOLDER_AUTO=   '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/people_face_identification/data/auto_labeled_people'
     user_cnn_module=False
-    topic_img='/usb_cam/image_raw'
+    topic_img='/face_detection/input_image'
     topic_face_img='/face_detection/face_image'
     topic_face_box='/face_detection/face_msg'
     topic_all_faces_img='/face_detection/all_faces_image'
