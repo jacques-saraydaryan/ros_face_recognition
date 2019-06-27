@@ -4,6 +4,7 @@
   <param name="/PeopleFaceIdentificationSimple/face_folder" value="$(find people_face_identification)/data/labeled_people"/>
   <param name="/PeopleFaceIdentificationSimple/face_folder_auto" value="$(find people_face_identification)/data/auto_labeled_people"/>
   <param name="/PeopleFaceIdentificationSimple/imgtest_folder" value="$(find people_face_identification)/data/img_tests"/>
+  <param name="/PeopleFaceIdentificationSimple/config_folder" value="$(find people_face_identification)/config"/>
 
   <node pkg="people_face_identification" type="PeopleFaceIdentification_simple.py" name="PeopleFaceIdentificationSimple"  output="screen" >
   </node>
