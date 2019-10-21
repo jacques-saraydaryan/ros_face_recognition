@@ -2,7 +2,7 @@ PeopleFaceIdentificationSimple:
   face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/labeled_people'
   face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/auto_labeled_people'
   imgtest_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/img_tests'
-  face_detection_mode: 1 #0 cascade Haard, 1:HOF?, 2:cnn_module
+  face_detection_mode: 1 #0 cascade Haard, 1:HOG, 2:cnn_module
   continuous_learn: True
   activate_detection: True
   only_detect_faces: False
