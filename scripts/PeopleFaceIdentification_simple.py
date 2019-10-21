@@ -432,6 +432,7 @@ class PeopleFaceIdentificationSimple():
         img=req.img
         try:
             frame,label_r,top_r,left_r,bottom_r,right_r,detected_faces_list=self.process_img_face(img, None,self.DETECTION_STATUS,req.isImgFace)
+            self._publishRosMsg(img, frame, detected_faces_list)
             eList=Entity2DList()
             entity2D_list=[]
             for  face in detected_faces_list:
