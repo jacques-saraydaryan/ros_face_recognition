@@ -2,14 +2,16 @@ PeopleFaceIdentificationSimple:
   face_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/labeled_people'
   face_folder_auto: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/auto_labeled_people'
   imgtest_folder: '/home/jsaraydaryan/ros_robotcupathome_ws/src/people_management/ros_face_recognition/data/img_tests'
+
   face_detection_mode: 1 #0 cascade Haard, 1:HOG, 2:cnn_module
   continuous_learn: True
+
   activate_detection: True
   only_detect_faces: False
   learn_timeout: 20
-  topic_img: '/usb_cam/image_raw'
+  #topic_img: '/usb_cam/image_raw'
   #topic_img: '/camera/rgb/image_rect_color'
-  #topic_img: '/pepper_robot/naoqi_driver/camera/front/image_raw'
+  topic_img: '/pepper_robot/camera/front/image_raw'
   topic_face_img: '/face_detection/face_image'
   topic_face_box: '/robocup/get/entity2D_evidence'
   topic_all_faces_box: '/face_detection/all_faces_msg'

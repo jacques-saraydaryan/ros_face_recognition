@@ -1,17 +1,18 @@
 <launch>
 
-  <node name="image_view_face" pkg="image_view" type="image_view" respawn="false" output="screen">
-     <remap from="image" to="/face_detection/face_image"/> 
-    <!-- <remap from="image" to="/face_detection/all_faces_image"/> -->
-    <param name="autosize" value="false" />
-  </node>
-  
-<rosparam file="$(find people_face_identification)/config/common_face.yaml" />
- <param name="/PeopleFaceIdentificationSimple/face_folder" value="$(find people_face_identification)/data/labeled_people"/>
- <param name="/PeopleFaceIdentificationSimple/face_folder_auto" value="$(find people_face_identification)/data/auto_labeled_people"/>
- <param name="/PeopleFaceIdentificationSimple/imgtest_folder" value="$(find people_face_identification)/data/img_tests"/>
+  <rosparam file="$(find people_face_identification)/config/common_face.yaml" />
+  <param name="/PeopleFaceIdentificationSimple/face_folder" value="$(find people_face_identification)/data/labeled_people"/>
+  <param name="/PeopleFaceIdentificationSimple/face_folder_auto" value="$(find people_face_identification)/data/auto_labeled_people"/>
+  <param name="/PeopleFaceIdentificationSimple/imgtest_folder" value="$(find people_face_identification)/data/img_tests"/>
+  <param name="/PeopleFaceIdentificationSimple/config_folder" value="$(find people_face_identification)/config"/>
+
   <node pkg="people_face_identification" type="PeopleFaceIdentification_simple.py" name="PeopleFaceIdentificationSimple"  output="screen" >
-    
+  </node>
+
+  <node name="image_view_face" pkg="image_view" type="image_view" respawn="false" output="screen">
+     <remap from="image" to="/face_detection/face_image"/>
+     <!-- <remap from="image" to="/face_detection/all_faces_image"/> -->
+     <param name="autosize" value="false" />
   </node>
 
 </launch>
