@@ -256,7 +256,14 @@ class PeopleFaceIdentificationSimple():
                     rospy.logdebug("STATUS: "+current_status)
                     if (current_status==self.LEARNING_STATUS and name == "Unknown") or (self.continuous_learn and name == "Unknown") or (current_status==self.FORCE_LEARNING_STATUS):
 
-                        label_tmp=str(uuid.uuid1())
+                        rospy.logdebug("NAME:"+str(name_w))
+                        #FIXME TO BE TESTED
+                        if name_w is not None and name_w != "":
+                            label_tmp = name_w
+                        else:
+                            label_tmp = str(uuid.uuid1())
+                        #label_tmp=str(uuid.uuid1())
+
                         rospy.loginfo("unknown face: launch learn operation")
                         self._processLearnFace(top, right, bottom, left,face_encoding,label_tmp,frame_copy,new_learnt_face)
                     label_r=name
